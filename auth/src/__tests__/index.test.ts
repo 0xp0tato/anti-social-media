@@ -1,7 +1,6 @@
-import { it } from "node:test";
-import request from "supertest";
-import { app } from "../app";
+import request from 'supertest';
+import { app } from '../app';
 
-it("TEST: Response of status 200", async () => {
-  await request(app).get("/").expect(200);
+it('TEST: Response of status 200', async () => {
+  await request(app).get('/').expect(200);
 });
