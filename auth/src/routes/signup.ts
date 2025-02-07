@@ -19,4 +19,4 @@ signUpRouter.post(
   }
 );
 
-export default signUpRouter;
+export { signUpRouter };
