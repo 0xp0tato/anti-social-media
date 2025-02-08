@@ -2,11 +2,101 @@ import request from 'supertest';
 import { APP_ROUTES } from '../../constants';
 import { app } from '../../app';
 
-it('Should return 442 if email is not valid', async () => {
-  await request(app).post(APP_ROUTES.SIGNUP_ROUTE).send({}).expect(422);
+/**
+ * Email Validity
+ *  - must follow the email regex
+ */
+describe('Test validity of email input', () => {
+  let password: string;
 
-  await request(app)
-    .post(APP_ROUTES.SIGNUP_ROUTE)
-    .send({ email: 'asdasdasd' })
-    .expect(422);
+  beforeAll(() => {
+    password = 'Password.1';
+  });
+
+  it('Should return 442 if email is not provided', async () => {
+    await request(app)
+      .post(APP_ROUTES.SIGNUP_ROUTE)
+      .send({ password })
+      .expect(422);
+  });
+
+  it('Should return 442 if email is not valid', async () => {
+    await request(app)
+      .post(APP_ROUTES.SIGNUP_ROUTE)
+      .send({ email: 'asdasdasd', password })
+      .expect(422);
+  });
+
+  it('Should return 200 if email is valid', async () => {
+    await request(app)
+      .post(APP_ROUTES.SIGNUP_ROUTE)
+      .send({ email: 'test@email.com', password })
+      .expect(200);
+  });
+});
+
+/**
+ * Password Validity
+ *  - must not be null
+ *  - must be atleast 8 characters long
+ *  - must have atleast 1 lowercase letter
+ *  - must have atleast 1 uppercase letter
+ *  - must have atleast 1 number
+ *  - must have atleast 1 special character
+ */
+describe('Test validity of password input', () => {
+  let email: string;
+
+  beforeAll(() => {
+    email = 'test@email.com';
+  });
+
+  it('Should return 442 if no password is provided', async () => {
+    await request(app)
+      .post(APP_ROUTES.SIGNUP_ROUTE)
+      .send({ email })
+      .expect(422);
+  });
+
+  it('Should return 442 if password length is less than 8 characters', async () => {
+    await request(app)
+      .post(APP_ROUTES.SIGNUP_ROUTE)
+      .send({ email, password: 'Pass.1' })
+      .expect(422);
+  });
+
+  it('Should return 442 if password has no lowercase letter', async () => {
+    await request(app)
+      .post(APP_ROUTES.SIGNUP_ROUTE)
+      .send({ email, password: 'PASSWORD.1' })
+      .expect(422);
+  });
+
+  it('Should return 442 if password has no uppercase letter', async () => {
+    await request(app)
+      .post(APP_ROUTES.SIGNUP_ROUTE)
+      .send({ email, password: 'password.1' })
+      .expect(422);
+  });
+
+  it('Should return 442 if password has no number', async () => {
+    await request(app)
+      .post(APP_ROUTES.SIGNUP_ROUTE)
+      .send({ email, password: 'Password.' })
+      .expect(422);
+  });
+
+  it('Should return 442 if password has no special character', async () => {
+    await request(app)
+      .post(APP_ROUTES.SIGNUP_ROUTE)
+      .send({ email, password: 'Password1' })
+      .expect(422);
+  });
+
+  it('Should return 200 if password is valid', async () => {
+    await request(app)
+      .post(APP_ROUTES.SIGNUP_ROUTE)
+      .send({ email, password: 'Password.1' })
+      .expect(200);
+  });
 });
