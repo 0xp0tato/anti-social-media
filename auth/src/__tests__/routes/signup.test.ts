@@ -100,3 +100,46 @@ describe('Test validity of password input', () => {
       .expect(200);
   });
 });
+
+/**
+ * Available methods for signup api
+ *  - POST
+ */
+
+describe('Test signup route method availability', () => {
+  let email: string;
+  let password: string;
+
+  beforeAll(() => {
+    email = 'test@email.com';
+    password = 'Password.1';
+  });
+  it('Should return 405 for non post requests', async () => {
+    await request(app)
+      .get(APP_ROUTES.SIGNUP_ROUTE)
+      .send({ email, password })
+      .expect(405);
+
+    await request(app)
+      .put(APP_ROUTES.SIGNUP_ROUTE)
+      .send({ email, password })
+      .expect(405);
+
+    await request(app)
+      .patch(APP_ROUTES.SIGNUP_ROUTE)
+      .send({ email, password })
+      .expect(405);
+
+    await request(app)
+      .delete(APP_ROUTES.SIGNUP_ROUTE)
+      .send({ email, password })
+      .expect(405);
+  });
+
+  it('Should return 200 for post requests', async () => {
+    await request(app)
+      .post(APP_ROUTES.SIGNUP_ROUTE)
+      .send({ email, password })
+      .expect(200);
+  });
+});
