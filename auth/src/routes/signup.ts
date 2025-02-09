@@ -30,4 +30,8 @@ signUpRouter.post(
   }
 );
 
+signUpRouter.all(APP_ROUTES.SIGNUP_ROUTE, (req: Request, res: Response) => {
+  res.status(405).send({});
+});
+
 export { signUpRouter };
