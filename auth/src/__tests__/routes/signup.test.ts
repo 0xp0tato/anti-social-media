@@ -102,8 +102,15 @@ describe('Test validity of password input', () => {
 });
 
 /**
- * Available methods for signup api
+ * Methods available for signup api
  *  - POST
+ *  - OPTIONS
+ *
+ * Methods not available for signup api
+ *  - GET
+ *  - PUT
+ *  - PATCH
+ *  - DELETE
  */
 
 describe('Test signup route method availability', () => {
@@ -114,32 +121,56 @@ describe('Test signup route method availability', () => {
     email = 'test@email.com';
     password = 'Password.1';
   });
-  it('Should return 405 for non post requests', async () => {
+
+  it('Should return 405 for GET request', async () => {
     await request(app)
       .get(APP_ROUTES.SIGNUP_ROUTE)
       .send({ email, password })
       .expect(405);
+  });
 
+  it('Should return 405 for PUT request', async () => {
     await request(app)
       .put(APP_ROUTES.SIGNUP_ROUTE)
       .send({ email, password })
       .expect(405);
+  });
 
+  it('Should return 405 for PATCH request', async () => {
     await request(app)
       .patch(APP_ROUTES.SIGNUP_ROUTE)
       .send({ email, password })
       .expect(405);
+  });
 
+  it('Should return 405 for DELETE request', async () => {
     await request(app)
       .delete(APP_ROUTES.SIGNUP_ROUTE)
       .send({ email, password })
       .expect(405);
   });
 
-  it('Should return 200 for post requests', async () => {
+  it('Should return 200 for POST requests', async () => {
     await request(app)
       .post(APP_ROUTES.SIGNUP_ROUTE)
       .send({ email, password })
       .expect(200);
+  });
+
+  it('Should return 200 for OPTION request', async () => {
+    await request(app)
+      .options(APP_ROUTES.SIGNUP_ROUTE)
+      .send({ email, password })
+      .expect(200);
+  });
+
+  it('Should return available method options for OPTION request', async () => {
+    const response = await request(app)
+      .options(APP_ROUTES.SIGNUP_ROUTE)
+      .send({ email, password })
+      .expect(200);
+
+    expect(response.get('access-control-allow-methods')).toContain('POST');
+    expect(response.get('access-control-allow-methods')).toContain('OPTIONS');
   });
 });
