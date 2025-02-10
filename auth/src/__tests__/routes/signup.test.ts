@@ -5,6 +5,7 @@ import { app } from '../../app';
 /**
  * Email Validity
  *  - must follow the email regex
+ *  - must be normalized
  */
 describe('Test validity of email input', () => {
     let password: string;
@@ -25,6 +26,18 @@ describe('Test validity of email input', () => {
             .post(APP_ROUTES.SIGNUP_ROUTE)
             .send({ email: 'asdasdasd', password })
             .expect(422);
+    });
+
+    it('Should not contain uppercase letters in the domain of the email', async () => {
+        const response = await request(app)
+            .post(APP_ROUTES.SIGNUP_ROUTE)
+            .send({
+                email: 'test@EMAIL.COM',
+                password,
+            })
+            .expect(200);
+
+        expect(response.body.email).toEqual('test@email.com');
     });
 
     it('Should return 200 if email is valid', async () => {

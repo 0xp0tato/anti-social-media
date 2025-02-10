@@ -8,7 +8,10 @@ const signUpRouter = express.Router();
 signUpRouter.post(
     APP_ROUTES.SIGNUP_ROUTE,
     [
-        body('email').isEmail().withMessage('Invalid email format'),
+        body('email')
+            .isEmail()
+            .normalizeEmail()
+            .withMessage('Invalid email format'),
         body('password')
             .isStrongPassword({
                 minLength: 8,
@@ -27,7 +30,7 @@ signUpRouter.post(
         if (!errors.isEmpty()) {
             res.status(422).send({ errors: errors.array() });
         }
-        res.send({});
+        res.send({ email: req.body.email });
     }
 );
 
