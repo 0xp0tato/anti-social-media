@@ -35,7 +35,7 @@ describe('Test validity of email input', () => {
                 email: 'test@EMAIL.COM',
                 password,
             })
-            .expect(200);
+            .expect(201);
 
         expect(response.body.email).toEqual('test@email.com');
     });
@@ -44,7 +44,7 @@ describe('Test validity of email input', () => {
         await request(app)
             .post(APP_ROUTES.SIGNUP_ROUTE)
             .send({ email: 'test@email.com', password })
-            .expect(200);
+            .expect(201);
     });
 });
 
@@ -110,7 +110,7 @@ describe('Test validity of password input', () => {
         await request(app)
             .post(APP_ROUTES.SIGNUP_ROUTE)
             .send({ email, password: 'Password.1' })
-            .expect(200);
+            .expect(201);
     });
 });
 
@@ -167,7 +167,7 @@ describe('Test signup route method availability', () => {
         await request(app)
             .post(APP_ROUTES.SIGNUP_ROUTE)
             .send({ email, password })
-            .expect(200);
+            .expect(201);
     });
 
     it('Should return 200 for OPTION request', async () => {
