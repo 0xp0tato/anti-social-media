@@ -1,8 +1,9 @@
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 import { APP_ROUTES } from '../constants';
 import { handleMethodNotAllowed } from '../utils';
 import { User } from '../models';
+import { InvalidInput } from '../errors';
 
 const signUpRouter = express.Router();
 
@@ -25,26 +26,23 @@ signUpRouter.post(
                 'Invalid password format. Password must have atleast 8 characters, atleast 1 lowercase letter, atleast 1 uppercase letter, atleast 1 number and atleast 1 symbol'
             ),
     ],
-    async (req: Request, res: Response) => {
+    async (req: Request, res: Response, next: NextFunction) => {
         const errors = validationResult(req);
 
         if (!errors.isEmpty()) {
-            res.status(422).send({ errors: errors.array() });
-            return;
+            throw new InvalidInput();
+            // res.status(422).send({ errors: errors.array() });
+            // return;
         }
 
         const { email, password } = req.body;
 
-        const existingUser = await User.findOne({ email });
-
-        if (existingUser) {
+        try {
+            const newUser = await User.create({ email, password });
+            res.status(201).send({ email: newUser.email });
+        } catch (error) {
             res.sendStatus(422);
-            return;
         }
-
-        await User.create({ email, password });
-
-        res.status(201).send({ email });
     }
 );
 
