@@ -19,6 +19,7 @@ beforeEach(async () => {
 });
 
 afterAll(async () => {
+    if (mongoose.connection.db) await mongoose.connection.db.dropDatabase();
     await mongoServer.stop();
     await mongoose.disconnect();
 });
