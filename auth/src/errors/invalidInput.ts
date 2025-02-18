@@ -1,16 +1,49 @@
+import { FieldValidationError, ValidationError } from 'express-validator';
 import { BaseCustomError } from './baseCustomError';
+import { SerializedErrorField, SerializedErrorOutput } from '../types';
 
+export type InvalidInputConstructorErrorsParams = ValidationError[];
 export class InvalidInput extends BaseCustomError {
-    statusCode: number = 422;
+    private errorMessage: string;
+    protected statusCode: number;
+    protected errors: InvalidInputConstructorErrorsParams | undefined;
 
-    constructor() {
+    constructor(errors?: InvalidInputConstructorErrorsParams) {
         super('User input does not match validation criteria');
+        this.errors = errors;
+        this.statusCode = 422;
+        this.errorMessage = 'User input does not match validation criteria';
+    }
+
+    private parseValidationErrors(): SerializedErrorOutput {
+        const parsedErrors: SerializedErrorField = {};
+
+        if (this.errors && this.errors.length > 0) {
+            this.errors.forEach((error) => {
+                if (error.type === 'field') {
+                    if (parsedErrors[error.path]) {
+                        parsedErrors[error.path].push(error.msg);
+                    } else {
+                        parsedErrors[error.path] = [error.msg];
+                    }
+                }
+            });
+        }
+
+        return {
+            errors: [
+                {
+                    message: this.errorMessage,
+                    fields: parsedErrors,
+                },
+            ],
+        };
     }
 
     getStatusCode(): number {
         return this.statusCode;
     }
-    serializeErrorOutput() {
-        throw new Error('Method not implemented.');
+    serializeErrorOutput(): SerializedErrorOutput {
+        return this.parseValidationErrors();
     }
 }

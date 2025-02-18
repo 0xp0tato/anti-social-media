@@ -2,6 +2,13 @@ import request from 'supertest';
 import { APP_ROUTES } from '../../constants';
 import { app } from '../../app';
 
+type SerializedError = {
+    message: string;
+    fields?: {
+        fieldName: string[];
+    }[];
+};
+
 /**
  * Email Validity
  *  - must follow the email regex

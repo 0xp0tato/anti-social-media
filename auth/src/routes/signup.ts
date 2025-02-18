@@ -29,11 +29,7 @@ signUpRouter.post(
     async (req: Request, res: Response, next: NextFunction) => {
         const errors = validationResult(req);
 
-        if (!errors.isEmpty()) {
-            throw new InvalidInput();
-            // res.status(422).send({ errors: errors.array() });
-            // return;
-        }
+        if (!errors.isEmpty()) throw new InvalidInput();
 
         const { email, password } = req.body;
 

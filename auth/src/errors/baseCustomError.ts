@@ -1,9 +1,11 @@
+import { SerializedErrorOutput } from '../types';
+
 export abstract class BaseCustomError extends Error {
-    abstract statusCode: number;
+    protected abstract statusCode: number;
     constructor(message?: string) {
         super();
     }
 
     abstract getStatusCode(): number;
-    abstract serializeErrorOutput(): any;
+    abstract serializeErrorOutput(): SerializedErrorOutput;
 }
