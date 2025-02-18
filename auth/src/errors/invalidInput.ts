@@ -4,7 +4,7 @@ import { SerializedErrorField, SerializedErrorOutput } from '../types';
 
 export type InvalidInputConstructorErrorsParams = ValidationError[];
 export class InvalidInput extends BaseCustomError {
-    private errorMessage: string;
+    protected defaultErrorMessage: string;
     protected statusCode: number;
     protected errors: InvalidInputConstructorErrorsParams | undefined;
 
@@ -12,7 +12,8 @@ export class InvalidInput extends BaseCustomError {
         super('User input does not match validation criteria');
         this.errors = errors;
         this.statusCode = 422;
-        this.errorMessage = 'User input does not match validation criteria';
+        this.defaultErrorMessage =
+            'User input does not match validation criteria';
     }
 
     private parseValidationErrors(): SerializedErrorOutput {
@@ -33,7 +34,7 @@ export class InvalidInput extends BaseCustomError {
         return {
             errors: [
                 {
-                    message: this.errorMessage,
+                    message: this.defaultErrorMessage,
                     fields: parsedErrors,
                 },
             ],
