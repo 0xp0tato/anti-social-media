@@ -12,8 +12,7 @@ export class InvalidInput extends BaseCustomError {
         super('User input does not match validation criteria');
         this.errors = errors;
         this.statusCode = 422;
-        this.defaultErrorMessage =
-            'User input does not match validation criteria';
+        this.defaultErrorMessage = 'User input does not match validation criteria';
     }
 
     private parseValidationErrors(): SerializedErrorOutput {

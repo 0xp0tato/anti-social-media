@@ -1,4 +1,5 @@
 import mongoose, { Model } from 'mongoose';
+import { DuplicatedEmail } from '../errors';
 
 interface IUser {
     email: string;
@@ -21,7 +22,7 @@ userSchema.pre('save', async function preSaveFunction(this: IUser, next) {
     const existingUser = await User.findOne({ email: this.email });
 
     if (existingUser) {
-        throw new Error('Email is already in the database');
+        throw new DuplicatedEmail();
     }
 
     next();

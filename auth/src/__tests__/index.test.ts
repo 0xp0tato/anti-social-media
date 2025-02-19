@@ -10,10 +10,7 @@ describe('Database functionality testing', () => {
     };
 
     it('Should save the user successfully', async () => {
-        const response = await request(app)
-            .post(APP_ROUTES.SIGNUP_ROUTE)
-            .send(validUserInfo)
-            .expect(201);
+        const response = await request(app).post(APP_ROUTES.SIGNUP_ROUTE).send(validUserInfo).expect(201);
 
         const user = await User.findOne({ email: response.body.email });
         const userEmail = user ? user.email : '';
@@ -23,14 +20,10 @@ describe('Database functionality testing', () => {
     });
 
     it('Does not allow duplicate emails', async () => {
-        await request(app)
-            .post(APP_ROUTES.SIGNUP_ROUTE)
-            .send(validUserInfo)
-            .expect(201);
+        await request(app).post(APP_ROUTES.SIGNUP_ROUTE).send(validUserInfo).expect(201);
 
-        await request(app)
-            .post(APP_ROUTES.SIGNUP_ROUTE)
-            .send(validUserInfo)
-            .expect(422);
+        const response = await request(app).post(APP_ROUTES.SIGNUP_ROUTE).send(validUserInfo).expect(422);
+
+        expect(response.body.errors[0].message).toEqual('The email already exists in the database');
     });
 });

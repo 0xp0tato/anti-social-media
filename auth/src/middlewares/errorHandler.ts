@@ -1,13 +1,10 @@
 import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 import { BaseCustomError } from '../errors';
 
-export const errorHandler = (
-    err: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
-    if (err instanceof BaseCustomError) res.sendStatus(err.getStatusCode());
+export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
+    if (err instanceof BaseCustomError) {
+        res.status(err.getStatusCode()).send(err.serializeErrorOutput());
+    }
 
     res.sendStatus(500);
 

@@ -10,10 +10,7 @@ const signUpRouter = express.Router();
 signUpRouter.post(
     APP_ROUTES.SIGNUP_ROUTE,
     [
-        body('email')
-            .isEmail()
-            .normalizeEmail()
-            .withMessage('Invalid email format'),
+        body('email').isEmail().normalizeEmail().withMessage('Invalid email format'),
         body('password')
             .isStrongPassword({
                 minLength: 8,
@@ -33,22 +30,15 @@ signUpRouter.post(
 
         const { email, password } = req.body;
 
-        try {
-            const newUser = await User.create({ email, password });
-            res.status(201).send({ email: newUser.email });
-        } catch (error) {
-            res.sendStatus(422);
-        }
+        const newUser = await User.create({ email, password });
+        res.status(201).send({ email: newUser.email });
     }
 );
 
 signUpRouter.options(APP_ROUTES.SIGNUP_ROUTE, (req: Request, res: Response) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.header(
-        'Access-Control-Allow-Headers',
-        'Content-Type, Authorization, Content-Length, X-Requested-With'
-    );
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
 
     res.sendStatus(200);
 });

@@ -5,7 +5,8 @@
     "main": "index.js",
     "scripts": {
         "start:dev": "nodemon -L ./src/index.ts",
-        "test": "jest --watchAll --no-cache"
+        "test": "jest --watchAll --no-cache",
+        "pretty": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json}\""
     },
     "jest": {
         "testEnvironment": "node",

@@ -1,7 +1,4 @@
-import {
-    InvalidInput,
-    InvalidInputConstructorErrorsParams,
-} from '../../errors';
+import { InvalidInput, InvalidInputConstructorErrorsParams } from '../../errors';
 
 describe('Test validity of InvalidInput error class', () => {
     it('should have status code of 422', () => {
@@ -27,9 +24,7 @@ describe('Test validity of InvalidInput error class', () => {
 
         const { fields = {} } = serializedErrors.errors[0];
 
-        expect(serializedErrors.errors[0].message).toEqual(
-            'User input does not match validation criteria'
-        );
+        expect(serializedErrors.errors[0].message).toEqual('User input does not match validation criteria');
 
         expect(Object.keys(fields)).toEqual(['password']);
         expect(fields.password).toHaveLength(1);
