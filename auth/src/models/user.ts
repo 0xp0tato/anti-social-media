@@ -1,10 +1,10 @@
-import mongoose, { Model } from 'mongoose';
+import mongoose from 'mongoose';
 import { DuplicatedEmail } from '../errors';
 
-interface IUser {
+export type IUser = mongoose.Document & {
     email: string;
     password: string;
-}
+};
 
 const userSchema = new mongoose.Schema<IUser>({
     email: {

@@ -4,6 +4,7 @@ import { APP_ROUTES } from '../constants';
 import { handleMethodNotAllowed } from '../utils';
 import { User } from '../models';
 import { InvalidInput } from '../errors';
+import { UserSignedUp } from '../events/userSignedUp';
 
 const signUpRouter = express.Router();
 
@@ -31,7 +32,9 @@ signUpRouter.post(
         const { email, password } = req.body;
 
         const newUser = await User.create({ email, password });
-        res.status(201).send({ email: newUser.email });
+        const userSignedUp = new UserSignedUp(newUser);
+
+        res.status(userSignedUp.getStatusCode()).send(userSignedUp.serializeRest());
     }
 );
 
