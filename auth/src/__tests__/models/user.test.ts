@@ -41,6 +41,7 @@ describe('Test the user model', () => {
         const newUser = await User.create(validUserInfo);
 
         expect(PasswordHash.compareSync('1234', validUserInfo.password)).toEqual(false);
+        expect(PasswordHash.compareSync('1234.1234', validUserInfo.password)).toEqual(false);
         expect(PasswordHash.compareSync(newUser.password, validUserInfo.password)).toEqual(true);
     });
 });

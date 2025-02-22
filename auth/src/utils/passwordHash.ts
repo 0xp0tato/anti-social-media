@@ -12,6 +12,8 @@ export class PasswordHash {
     static compareSync(hashedPassword: string, originalPassword: string): boolean {
         const [hash, salt] = hashedPassword.split('.');
 
+        if (!salt) return false;
+
         const buffer = scryptSync(originalPassword, salt, PASSWORD_HASH_KEYLEN);
 
         return buffer.toString('hex') === hash;
